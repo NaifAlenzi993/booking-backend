@@ -7,12 +7,14 @@ const login = async (req, res) => {
   
     try {
       const user = await userModel.findOne({ email: email });
+      const dateNow = new Date()
+      const datalastActiveAt = await userModel.findOneAndUpdate({lastActiveAt : dateNow})
       if (user) {
         const check = await bcrypt.compare(password, user.password);
         if (check === true) {
-          const payload = { userId: user._id, userName: user.name };
+          const payload = { userId: user._id, username: user.name };
           const token = jwt.sign(payload, "ABC");
-          res.status(200).json({ token , userId : user._id  });
+          res.status(200).json({ token , userId : user._id , username: user.name , type:user.type});
           // res.status(200).json(`Hello admain! ${user.name}`);
         } else {
           res.status(403).json("wrong PassWord!");
@@ -28,14 +30,15 @@ const login = async (req, res) => {
 
   const signUp = async (req, res) => {
     let { name, email, password } = req.body;
-    try {
-      password = await bcrypt.hash(password, 10);
-      const findEmail = userModel.find({email : email})
-      if (findEmail){
-      res.status(404).json("emeil found !")
+    const emailFound = await userModel.findOne({ email: email });
+    if (emailFound){
+      res.status(404).json("email found !!")
       return
-      }
-      const newSignUp = new userModel({ name, email, password });
+    }
+    const dataNow = new Date()
+    try {
+      password = await bcrypt.hash(password, 10); 
+      const newSignUp = new userModel({ name, email, password ,dateCreateAcc: dataNow , type: 2 ,lastActiveAt : 0});
       const response = await newSignUp.save();
       res.status(201).json(response);
     } catch (error) {

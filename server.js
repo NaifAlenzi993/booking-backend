@@ -8,12 +8,12 @@ app.use(express.json());
 app.use(cors());
 const port = 5000
 ///////////
-
+const commentRoute = require("./routers/routes/commentsRoute")
 const houseRoute = require("./routers/routes/housesRoute")
-app.use(houseRoute)
 const signUpRoute = require("./routers/routes/signUpRoute")
 const loginRoute  = require("./routers/routes/loginRoute")
 const  userRoute = require("./routers/routes/userRoute")
+app.use(houseRoute)
 app.use(signUpRoute)
 app.use(loginRoute)
 app.use(userRoute)

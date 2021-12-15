@@ -1,9 +1,9 @@
 const housesModel = require("../../db/models/housesModel")
 
 const addHouses =  async (req , res)=>{
-        const {name , description , img} = req.body;
+        const {name , description , img , city , rooms , beds , baths , price, guests , views } = req.body;
         const user = req.token.userId
-        const cours = new housesModel({name, description, img , user})
+        const cours = new housesModel({name, description, img , user , city , rooms , beds , baths , price , guests ,  views : (views !== 0 ? views : 0)})
         try {
             const sav = await cours.save()
             const cour = await housesModel.find({}).populate("user")
@@ -11,6 +11,7 @@ const addHouses =  async (req , res)=>{
         } catch (error) {
             res.status(403).json(error)
         }
+
         
     }
 
@@ -33,8 +34,7 @@ const deleteHouse = async (req , res)=>{
     }
 
 
-const getHouse = async (req , res)=>{
-    console.log("jgjgkh");
+    const getHouse = async (req , res)=>{
         try {
             const cour = await housesModel.find({}).populate("user")
             res.status(200).json(cour)
@@ -42,6 +42,16 @@ const getHouse = async (req , res)=>{
             
         }
        
+    }
+
+    const getHouseParams = async (req , res) => {
+        const id = req.params.id
+        try {
+            const cour = await housesModel.find({_id:id}).populate("user")
+            res.status(200).json(cour)
+        } catch (error) {
+            res.status(404).json(error)
+        }
     }
 
     const updateHouse = async (req , res) => {
@@ -73,4 +83,4 @@ const getHouse = async (req , res)=>{
 
 
 
-    module.exports = {addHouses , deleteHouse  , getHouse , updateHouse , deleteAll}
+    module.exports = {addHouses , deleteHouse  , getHouse , updateHouse , getHouseParams , deleteAll}
