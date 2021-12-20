@@ -4,7 +4,8 @@ const userModel = new mongoose.Schema({
     name: { type : String },
     email: { type : String  , unique : true },
     password: { type : String },
-    type: {type: Number},
+    role: {type: Number},
+    fav : [{type: mongoose.Schema.Types.ObjectId, ref: "housesModel"}],
     dateCreateAcc : {type: Date} , 
     lastActiveAt: {type: Date}
 });

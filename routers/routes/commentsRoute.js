@@ -1,10 +1,11 @@
 const express = require("express");
-const commentModel = express.Router();
+const commentRoute = express.Router();
 
-const {addComment } = require("../controllers/comments");
+const {addComment , getComments} = require("../controllers/comments");
 const {authentication} = require("../middlewares/authentication")
 
-commentModel.post("/addcomment" , authentication , addComment)
+commentRoute.post("/comment" , authentication , addComment)
+commentRoute.get("/comment" , authentication , getComments)
 
 
-module.exports = commentModel;
+module.exports = commentRoute;
