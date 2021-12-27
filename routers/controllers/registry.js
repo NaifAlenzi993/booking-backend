@@ -8,11 +8,11 @@ const login = async (req, res) => {
     try {
       const user = await userModel.findOne({ email: email });
       const dateNow = getDate()
-      const datalastActiveAt = await userModel.findOneAndUpdate({lastActiveAt : dateNow})
+      const datalastActiveAt = await userModel.findOneAndUpdate({email : email} , {lastActiveAt:dateNow})
       if (user) {
         const check = await bcrypt.compare(password, user.password);
         if (check === true) {
-          const payload = { userId: user._id, username: user.name };
+          const payload = { userId: user._id, username: user.name , role : user.role};
           const token = jwt.sign(payload, "ABC");
           res.status(200).json({ token , userId : user._id , username: user.name , role:user.role});
           // res.status(200).json(`Hello admain! ${user.name}`);
@@ -38,7 +38,7 @@ const login = async (req, res) => {
     const dataNow = getDate()
     try {
       password = await bcrypt.hash(password, 10); 
-      const newSignUp = new userModel({ name, email, password ,dateCreateAcc: dataNow , role: 2 ,lastActiveAt : 0});
+      const newSignUp = new userModel({ name, email, password ,dateCreateAcc: dataNow , role: 2 ,lastActiveAt : 0  , img : "https://freesvg.org/img/abstract-user-flat-4.png"});
       const response = await newSignUp.save();
       res.status(201).json(response);
     } catch (error) {

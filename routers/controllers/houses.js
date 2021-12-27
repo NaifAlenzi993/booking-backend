@@ -1,25 +1,44 @@
 const housesModel = require("../../db/models/housesModel")
+const requestModel = require("../../db/models/requestsModel")
 // const favModel = require("../../db/models/favModel")
 
+const addRequestToHouse = async (req , res) => {
+    const {name , description , img , city , rooms , beds , baths , price, guests , views } = req.body;
+
+
+}
+
 const addHouses =  async (req , res)=>{
-        const {name , description , img , city , rooms , beds , baths , price, guests , views } = req.body;
-        const user = req.token.userId
-        const houses = new housesModel({name, description, img , user , city , rooms , beds , baths , price , guests ,  views : (views !== 0 ? views : 0)})
+    // console.log("jgkhgk");
+    const {name , description , img , city , rooms , beds , baths , price, guests , views } = req.body;
+    const user = req.token.userId;
+    const role = req.token.role;
+    if (role == 0) {
+        const newHouse = new housesModel({name, description , img , user , city , rooms , beds , baths , price , guests , views : 0})
         try {
-            const sav = await houses.save()
+            await newHouse.save()
             const house = await housesModel.find({}).populate("user")
-            res.status(200).json(house)
+            res.status(200).json("Added House Done !!")
+        } catch (error) {
+            res.status(403).json(error)
+        }
+    }else{
+        const newRequest = new requestModel({name, description , img , user , city , rooms , beds , baths , price , guests , views : 0})
+        try {
+            await newRequest.save()
+            // const house = await housesModel.find({}).populate("user")
+            res.status(201).json("Added Request Done !!")
         } catch (error) {
             res.status(403).json(error)
         }
 
-        
+    }
+    
     }
 
-const deleteHouse = async (req , res)=>{
+const deleteHouseById = async (req , res)=>{
         let id = req.params.id
         const userId = req.token.userId
-
             try {
                 const deletej = await housesModel.findOneAndDelete({_id:id,user:userId})
                 const house = await housesModel.find({}).populate("user")
@@ -27,8 +46,6 @@ const deleteHouse = async (req , res)=>{
             } catch (error) {
                 res.status(403).json(error)
             }
-    
-        
     }
 
 
@@ -46,13 +63,15 @@ const deleteHouse = async (req , res)=>{
         const id = req.params.id
         try {
             const house = await housesModel.find({_id:id}).populate("user")
-            res.status(200).json(house)
+            await housesModel.findOneAndUpdate({_id:id} , {views: house[0].views + 1})
+            const houseu = await housesModel.find({_id:id}).populate("user")
+            res.status(200).json(houseu)
         } catch (error) {
             res.status(404).json(error)
         }
     }
 
-    const updateHouse = async (req , res) => {
+    const updateHouseById = async (req , res) => {
             const {idold , name , description , img} = req.body;
             try {
                 let houseUpdate = name && await housesModel.findByIdAndUpdate({_id: idold} , {name})
@@ -78,4 +97,4 @@ const deleteHouse = async (req , res)=>{
             }
 
 
-    module.exports = {addHouses , deleteHouse  , getHouse , updateHouse , getHouseById , deleteAll}
+    module.exports = {addHouses , deleteHouseById  , getHouse , updateHouseById , getHouseById , deleteAll}

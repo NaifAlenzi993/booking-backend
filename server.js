@@ -14,7 +14,9 @@ const FavRoute = require("./routers/routes/FavRoute")
 const houseRoute = require("./routers/routes/housesRoute")
 const signUpRoute = require("./routers/routes/signUpRoute")
 const loginRoute  = require("./routers/routes/loginRoute")
-const  userRoute = require("./routers/routes/userRoute")
+const userRoute = require("./routers/routes/userRoute")
+const dashboardRoute = require("./routers/routes/dashboardRoute")
+
 app.use(bookingRoute)
 app.use(commentRoute)
 app.use(FavRoute)
@@ -22,6 +24,7 @@ app.use(houseRoute)
 app.use(signUpRoute)
 app.use(loginRoute)
 app.use(userRoute)
+app.use(dashboardRoute)
 
 ///////////
 app.listen( port , ()=>{

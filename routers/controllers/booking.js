@@ -14,7 +14,6 @@ const addBooking = async (req  , res) => {
     } catch(error) {
         res.status(404).json(error)
     }
-
 }
 
 const getBooking = async (req , res) => {
@@ -37,6 +36,10 @@ const delteBooking = async (req , res) => {
     } catch (error) {
         res.status(403).json(error)
     }
+}
+
+const payBooking = async (req , res) => {
+
 }
 
 

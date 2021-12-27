@@ -26,6 +26,7 @@ const addFav = async (req , res) => {
 
 const getFav = async (req , res) => {
     const user = req.token.userId
+    // console.log("dfkhdkj" , "line 29 fav");
     try {
         const favAll = await favModel.find({user:user}).populate("user").populate("house")
         res.status(200).json(favAll)
