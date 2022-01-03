@@ -1,5 +1,6 @@
 const housesModel = require("../../db/models/housesModel")
 const requestModel = require("../../db/models/requestsModel")
+const userModel = require("../../db/models/userModel")
 // const favModel = require("../../db/models/favModel")
 
 const addRequestToHouse = async (req , res) => {
@@ -39,10 +40,18 @@ const addHouses =  async (req , res)=>{
 const deleteHouseById = async (req , res)=>{
         let id = req.params.id
         const userId = req.token.userId
+        const role = req.token.role
             try {
-                const deletej = await housesModel.findOneAndDelete({_id:id,user:userId})
-                const house = await housesModel.find({}).populate("user")
-                res.status(200).json(house)
+                if (role == 0) {
+                    const deletej = await housesModel.findOneAndDelete({_id:id})
+                    const house = await housesModel.find({}).populate("user")
+                    res.status(200).json(house)
+                }else{
+                    const deletej = await housesModel.findOneAndDelete({_id:id,user:userId})
+                    const house = await housesModel.find({}).populate("user")
+                    res.status(200).json(house)
+                }
+                
             } catch (error) {
                 res.status(403).json(error)
             }
@@ -96,5 +105,15 @@ const deleteHouseById = async (req , res)=>{
             }
             }
 
+    const getInfoUser = async (req , res) => {
+        const id = req.params.id
+        try {
+            const userInfo = await userModel.findOne({_id: id} , {password : 0})
+            res.status(200).json(userInfo)
+        } catch (error) {
+            res.send("error line 108 houses.js")
+        }
+    }
 
-    module.exports = {addHouses , deleteHouseById  , getHouse , updateHouseById , getHouseById , deleteAll}
+
+    module.exports = {addHouses , deleteHouseById  , getHouse , updateHouseById , getHouseById , deleteAll , getInfoUser}

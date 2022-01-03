@@ -6,9 +6,8 @@ const userModel = new mongoose.Schema({
     password: { type : String },
     role: {type: Number},
     img: {type: String},
-    fav : [{type: mongoose.Schema.Types.ObjectId, ref: "housesModel"}],
     dateCreateAcc : {type: String} , 
-    lastActiveAt: {type: String}
+    lastActiveAt: {type: String},
 });
 
 module.exports = mongoose.model("userModel", userModel)

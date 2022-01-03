@@ -1,17 +1,19 @@
 const express = require("express");
-const { model, models } = require("mongoose");
-const dashboardModel = express.Router();
+const dashboardRoute = express.Router();
 
 
-const {requestAccept , getAllRequests , rejectRequest} = require("../controllers/dashboard");
+const {requestAccept , getAllRequests , rejectRequest , sendMail} = require("../controllers/dashboard");
 const {authentication} = require("../middlewares/authentication")
 const {authorization} = require("../middlewares/authorization")
 
 
-dashboardModel.post("/request" , authentication , authorization, requestAccept)
-dashboardModel.get("/request" , authentication , authorization , getAllRequests)
-dashboardModel.delete("/request/:id" , authentication , authorization , rejectRequest)
+
+dashboardRoute.post("/request" , authentication , authorization, requestAccept)
+dashboardRoute.get("/request" , authentication , authorization , getAllRequests)
+dashboardRoute.delete("/request/:id" , authentication , authorization , rejectRequest)
+
+dashboardRoute.post("/sendmail" , authentication , sendMail)
 
 
 
-module.exports = dashboardModel
+module.exports = dashboardRoute
