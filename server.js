@@ -17,6 +17,7 @@ const signUpRoute = require("./routers/routes/signUpRoute")
 const loginRoute  = require("./routers/routes/loginRoute")
 const userRoute = require("./routers/routes/userRoute")
 const dashboardRoute = require("./routers/routes/dashboardRoute")
+const mailRoute = require("./routers/routes/mailRoute")
 
 app.use(bookingRoute)
 app.use(commentRoute)
@@ -26,6 +27,7 @@ app.use(signUpRoute)
 app.use(loginRoute)
 app.use(userRoute)
 app.use(dashboardRoute)
+app.use(mailRoute)
 
 ///////////
 app.listen( port , ()=>{

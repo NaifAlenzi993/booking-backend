@@ -1,7 +1,7 @@
 const housesModel = require("../../db/models/housesModel")
 const requestModel = require("../../db/models/requestsModel")
 const userModel = require("../../db/models/userModel")
-// const favModel = require("../../db/models/favModel")
+const favModel = require("../../db/models/favModel")
 
 const addRequestToHouse = async (req , res) => {
     const {name , description , img , city , rooms , beds , baths , price, guests , views } = req.body;
@@ -11,11 +11,11 @@ const addRequestToHouse = async (req , res) => {
 
 const addHouses =  async (req , res)=>{
     // console.log("jgkhgk");
-    const {name , description , img , city , rooms , beds , baths , price, guests , views } = req.body;
+    const {name , description , img , city , rooms , beds , baths , price, guests , views} = req.body;
     const user = req.token.userId;
     const role = req.token.role;
     if (role == 0) {
-        const newHouse = new housesModel({name, description , img , user , city , rooms , beds , baths , price , guests , views : 0})
+        const newHouse = new housesModel({name, description , img , user , city , rooms , beds , baths , price , guests , views : 0 , rating:5})
         try {
             await newHouse.save()
             const house = await housesModel.find({}).populate("user")
@@ -51,7 +51,6 @@ const deleteHouseById = async (req , res)=>{
                     const house = await housesModel.find({}).populate("user")
                     res.status(200).json(house)
                 }
-                
             } catch (error) {
                 res.status(403).json(error)
             }
@@ -95,6 +94,29 @@ const deleteHouseById = async (req , res)=>{
         }
 
 
+    const getAllHouseByUserId = async (req , res) => {
+        const id = req.params.id
+        const userId = req.token.userId
+        try {
+            const allHouse = await housesModel.find({user:id})
+            res.status(200).json(allHouse)
+        } catch (error) {
+            res.send("getallHouseByUserId : " + error)
+        }
+    }
+
+    const getAllFavByUserId = async (req , res) => {
+        const id = req.params.id
+        const userId = req.token.userId
+        try {
+            const allFav = await favModel.find({user:id})
+            res.status(200).json(allFav)
+        } catch (error) {
+            res.send("getAllFavByUserId : " + error)
+        }
+    }
+
+
     const deleteAll = async (req , res)=>{
             try {
                 const deletej = await housesModel.remove()
@@ -116,4 +138,4 @@ const deleteHouseById = async (req , res)=>{
     }
 
 
-    module.exports = {addHouses , deleteHouseById  , getHouse , updateHouseById , getHouseById , deleteAll , getInfoUser}
+    module.exports = {addHouses , deleteHouseById  , getHouse , updateHouseById , getHouseById , deleteAll , getInfoUser , getAllHouseByUserId , getAllFavByUserId}

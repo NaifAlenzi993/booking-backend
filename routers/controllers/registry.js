@@ -93,11 +93,8 @@ const login = async (req, res) => {
 
 const sendNewCodeActive = async (req , res) => {
   const {email} = req.body
-
   const randomCode = rndStr(10)
-
   const user = await activeUserModel.findOneAndUpdate({email:email} , {codeActive:randomCode})
-
   const transport =  nodemailer.createTransport({
     service : "gmail",
     auth: {
