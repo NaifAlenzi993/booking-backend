@@ -50,8 +50,9 @@ const login = async (req, res) => {
 
   const signupWithActiveCode = async (req , res) => {
     let {email , name , password} = req.body
+
     
-     const randomCode = rndStr(10) 
+     const randomCode = rndStr(4) 
      password = await bcrypt.hash(password, 10); 
 
     const emailFound = await userModel.findOne({ email: email });
@@ -59,6 +60,7 @@ const login = async (req, res) => {
       res.status(404).json("email found !!")
       return
     }
+
     
     const transport =  nodemailer.createTransport({
         service : "gmail",
@@ -80,7 +82,7 @@ const login = async (req, res) => {
             `
         } , (err , data) => {
             if (err) {
-                res.status(404).json(err)
+                res.status(404).json("transport Line(85): " + err)
             }else{  
               const dataNow = getDate()
               const userNew = new activeUserModel({email , name , password , codeActive: randomCode , dateCreateAcc: dataNow , role: 2 , lastActiveAt: 0 , img : "https://freesvg.org/img/abstract-user-flat-4.png"})
@@ -93,7 +95,7 @@ const login = async (req, res) => {
 
 const sendNewCodeActive = async (req , res) => {
   const {email} = req.body
-  const randomCode = rndStr(10)
+  const randomCode = rndStr(4)
   const user = await activeUserModel.findOneAndUpdate({email:email} , {codeActive:randomCode})
   const transport =  nodemailer.createTransport({
     service : "gmail",
@@ -131,7 +133,7 @@ const sendNewCodeActive = async (req , res) => {
         if (userFound) {
           if (code == codeActive) { 
             await activeUserModel.deleteOne({email : email})
-            const newUser = userModel({email , password , name , role , img ,dateCreateAcc , lastActiveAt , codeActive})
+            const newUser = new userModel({email , password , name , role , img ,dateCreateAcc , lastActiveAt , codeActive})
             await newUser.save()
             res.status(200).json("")
           }else{

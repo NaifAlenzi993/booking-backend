@@ -30,7 +30,7 @@ app.use(dashboardRoute)
 app.use(mailRoute)
 
 ///////////
-app.listen( port , ()=>{
+app.listen(process.env.PORT ||  port , ()=>{
     console.log("server is runing on Port : " + port);
 })
 
